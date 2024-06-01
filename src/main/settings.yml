@@ -1,0 +1,6 @@
+# Defines the maximum number of homes each player can set
+maxHomes: 2
+
+#Defines how long you must wait to teleport after doing /home in seconds
+settings:
+  teleportDelay: 5

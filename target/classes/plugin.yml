@@ -1,0 +1,11 @@
+name: EzHomes
+version: 1.0
+main: com.thefancychiken.ezhomes.EzHomes
+api-version: 1.20
+commands:
+  home:
+    description: Teleport to your home.
+    usage: "/home"
+  sethome:
+    description: Set your current location as home.
+    usage: "/sethome"
