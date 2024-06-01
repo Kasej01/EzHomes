@@ -1,0 +1,3 @@
+settings:
+# Default of 5 seconds, 1 second = 20 ticks
+  teleportDelay: 100

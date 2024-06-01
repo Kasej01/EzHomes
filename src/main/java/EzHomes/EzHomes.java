@@ -1,4 +1,4 @@
-package com.thefancychiken.ezhomes;
+package ezhomes;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -11,25 +11,32 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.configuration.ConfigurationSection;
+
 
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.UUID;
 
 public class EzHomes extends JavaPlugin {
-    private HashMap<UUID, List<Location>> homeLocations = new HashMap<>();
+    private Map<UUID, Map<String, Location>> homeLocations = new HashMap<>();
     private File homesFile;
     private FileConfiguration homesConfig;
-    Yaml yaml = new Yaml();
-    InputStream input = this.getClass().getClassLoader().getResourceAsStream("settings.yml");
-    Map<Int, Object> obj = yaml.load(inputStream);
 
     @Override
     public void onEnable() {
+        saveDefaultConfig();  // Save the default config from resources if not present
+        reloadConfig();  // Load the configuration
+
+        // Setup commands and other initialization
         this.getCommand("sethome").setExecutor(new SetHomeCommand());
         this.getCommand("home").setExecutor(new HomeCommand());
         this.getCommand("homes").setExecutor(new ViewHomes());
+        this.getCommand("delhome").setExecutor(new DelHome());
         createHomesFile();
         loadHomes();
         getLogger().info("EzHomes Enabled");
@@ -58,23 +65,27 @@ public class EzHomes extends JavaPlugin {
     private void loadHomes() {
         for (String key : homesConfig.getKeys(false)) {
             UUID playerId = UUID.fromString(key);
-            List<?> locationsList = homesConfig.getList(key);
-            List<Location> locations = new ArrayList<>();
-            for (Object obj : locationsList) {
-                if (obj instanceof Location) {
-                    locations.add((Location) obj);
+            ConfigurationSection homesSection = homesConfig.getConfigurationSection(key);
+            HashMap<String, Location> homes = new HashMap<>();
+            if (homesSection != null) {
+                for (String homeName : homesSection.getKeys(false)) {
+                    Location location = homesSection.getLocation(homeName);
+                    if (location != null) {
+                        homes.put(homeName, location);
+                    }
                 }
             }
-            if (!locations.isEmpty()) {
-                homeLocations.put(playerId, locations);
-            }
+            homeLocations.put(playerId, homes);
         }
     }
 
+
     private void saveHomes() {
         for (UUID playerId : homeLocations.keySet()) {
-            List<Location> locations = homeLocations.get(playerId);
-            homesConfig.set(playerId.toString(), locations);
+            Map<String, Location> homes = homeLocations.get(playerId);
+            for (HashMap.Entry<String, Location> entry : homes.entrySet()) {
+                homesConfig.set(playerId.toString() + "." + entry.getKey(), entry.getValue());
+            }
         }
 
         try {
@@ -85,23 +96,30 @@ public class EzHomes extends JavaPlugin {
         }
     }
 
+
     private class SetHomeCommand implements CommandExecutor {
         @Override
         public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
             if (sender instanceof Player) {
                 Player player = (Player) sender;
-                
+
                 if(args.length < 1){
                     player.sendMessage(ChatColor.RED + "Please provide a name for your home");
                     return false;
                 }
                 String homeName = args[0];
-                List<Location> homes = homeLocations.getOrDefault(player.getUniqueId(), new ArrayList<>());
-                homes.add(player.getLocation());
-                homeLocations.put(player.getUniqueId(), homes);
-                saveHomes();
-                player.sendMessage(ChatColor.GREEN + "Home " + homeName + " set!");
-                return true;
+                Map<String, Location> homes = homeLocations.getOrDefault(player.getUniqueId(), new HashMap<>());
+                if(homes.size() < getConfig().getInt("settings.maxHomes")){
+                    homes.put(homeName, player.getLocation());
+                    homeLocations.put(player.getUniqueId(), homes);
+                    saveHomes();
+                    player.sendMessage(ChatColor.GREEN + "Home " + homeName + " set!");
+                    return true;
+                }
+                else{
+                    player.sendMessage(ChatColor.RED + "You already have the maximum amount of homes allowed (" + getConfig().getInt("settings.maxHomes") + ")");
+                    return false;
+                }
             } else {
                 sender.sendMessage(ChatColor.RED + "This command can only be used by players.");
                 return false;
@@ -109,49 +127,120 @@ public class EzHomes extends JavaPlugin {
         }
     }
 
-    private class ViewHomes implements CommandExecutor{
+
+    private class ViewHomes implements CommandExecutor {
+        @Override
+        public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+            if (sender instanceof Player) {
+                Player player = (Player) sender;
+                Map<String, Location> homes = homeLocations.get(player.getUniqueId());
+                if (homes != null && !homes.isEmpty()) {
+                    StringBuilder homeList = new StringBuilder(ChatColor.GREEN + "Homes:\n");
+                    for (Map.Entry<String, Location> entry : homes.entrySet()) {
+                        homeList.append(ChatColor.YELLOW).append(entry.getKey())
+                                .append("   ");
+                    }
+                    sender.sendMessage(homeList.toString());
+                } else {
+                    sender.sendMessage(ChatColor.RED + "You have no homes set.");
+                }
+                return true;
+            }
+            return false;
+        }
+    }
+
+    private class DelHome implements CommandExecutor {
         @Override
         public boolean onCommand(CommandSender sender, Command command, String label, String[] args){
             if(sender instanceof Player){
                 Player player = (Player) sender;
-                Location homes[] = homeLocations.get(player.getUniqueId());
+                if(args.length < 1){
+                    player.sendMessage(ChatColor.RED + "Please provide the name of the home you would like to delete");
+                    return true;
+                }
+
+                Map<String, Location> homes = homeLocations.get(player.getUniqueId());
+                String homeName = args[0];
+                if(homes == null || !homes.containsKey(homeName)){
+                    player.sendMessage(ChatColor.RED + "Could not find home " + homeName);
+                    return true;  // Returning true because the command was processed but unsuccessful
+                }
+
+                // Remove the specified home from the memory map
+                homes.remove(homeName);
+                if(homes.isEmpty()){
+                    homeLocations.remove(player.getUniqueId());
+                } else {
+                    homeLocations.put(player.getUniqueId(), homes);
+                }
+
+                // Call the function to delete the home from the config
+                delHomeFromConfig(player.getUniqueId(), homeName);
+
+                player.sendMessage(ChatColor.GREEN + "Home " + homeName + " deleted!");
+                return true;
+            }
+            // Command was not executed because the sender is not a player
+            return false; 
+        }
+
+        private void delHomeFromConfig(UUID playerId, String homeName) {
+            // Check if the player's homes exist in the config
+            if (homesConfig.contains(playerId.toString() + "." + homeName)) {
+                // Remove the specific home entry from the configuration
+                homesConfig.set(playerId.toString() + "." + homeName, null);
+                // Save the config to file
+                try {
+                    homesConfig.save(homesFile);
+                    getLogger().info("Updated homes configuration file.");
+                } catch (IOException e) {
+                    getLogger().severe("Could not save the homes configuration file: " + e.getMessage());
+                }
             }
         }
+
     }
+
+
 
     private class HomeCommand implements CommandExecutor {
         @Override
         public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
             if (sender instanceof Player) {
                 Player player = (Player) sender;
-                List<Location> homes = homeLocations.get(player.getUniqueId());
-                if(args.length < 1){
+                if (args.length < 1) {
                     player.sendMessage(ChatColor.RED + "Please provide the name of the home you would like to teleport to");
-                }
-                Location home = homeLocations.get(player.getUniqueId());
-                if (home != null) {
-                    final Location startLocation = player.getLocation();
-                    player.sendMessage(ChatColor.GRAY + "Stay still for 5 seconds to teleport home.");
-                    new BukkitRunnable() {
-                        @Override
-                        public void run() {
-                            if (startLocation.getBlock().equals(player.getLocation().getBlock())) {
-                                player.teleport(home);
-                                player.sendMessage(ChatColor.GREEN + "Teleported to home!");
-                            } else {
-                                player.sendMessage(ChatColor.RED + "Movement detected, teleportation cancelled.");
-                            }
-                        }
-                    }.runTaskLater(EzHomes.this, 100);
-                    return true;
-                } else {
-                    player.sendMessage(ChatColor.RED + "No home set.");
                     return false;
                 }
-            } else {
-                sender.sendMessage(ChatColor.RED + "This command can only be used by players.");
-                return false;
+
+                String homeName = args[0];
+                Map<String, Location> homes = homeLocations.get(player.getUniqueId());
+                if (homes == null || !homes.containsKey(homeName)) {
+                    player.sendMessage(ChatColor.RED + "No home set with the name: " + homeName);
+                    return false;
+                }
+                final Location home = homes.get(homeName);
+                int delay = getConfig().getInt("settings.teleportDelay");
+
+                final Location startLocation = player.getLocation();
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        if (startLocation.getBlock().equals(player.getLocation().getBlock())) {
+                            player.teleport(home);
+                            player.sendMessage(ChatColor.GREEN + "Teleported to home " + homeName + "!");
+                        } else {
+                            player.sendMessage(ChatColor.RED + "Movement detected, teleportation cancelled.");
+                        }
+                    }
+                }.runTaskLater(EzHomes.this, delay);
+                player.sendMessage(ChatColor.GRAY + "Stay still for " + (delay / 20) + " seconds to teleport home.");
+                return true;
             }
+            return false;
         }
     }
+
+
 }

@@ -4,17 +4,24 @@ Adds homing capabilities so that you and your friends no longer have to run back
 ## How To Use
 
 ```bash
-#Use the below command to set your home to your players current location
-/sethome
+#Use the below command to set a home to your current location
+/sethome NameOfHome
 
 # If you already have a home set, use the below command to teleport to it
-# You must stand still for 5 seconds in order to teleport home, if you move, your teleport will be cancelled.
-/home
+/home NameOfHome
+
+# Delets the home the player specifies
+/delhome NameOfHome
+
+# Displays all players saved homes
+/homes
 ```
 
+## Custom settings
+To change settings, you can access the folder called EzHomes within your servers plugins folder (after running the plugin at least once), and access the config.yml file. Within this file, you will find that you can edit  the maximum amount of homes a player can have (default: 2) and the time it takes to teleport to a home (default: 5 seconds).
 
 ## Future work
-Soon, we will be adding permissions, so that server admins can decide who gets to use these commands and who does not. We will also be adding settings that can be adjusted by server admins to set multiple homes and change the time to teleport.
+Soon, we will be adding permissions, so that server admins can decide who gets to use these commands and who does not.
 
 ## Download
 

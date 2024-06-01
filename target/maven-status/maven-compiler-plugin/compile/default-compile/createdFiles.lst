@@ -1,5 +1,7 @@
-com\thefancychiken\ezhomes\EzHomes$1.class
-com\thefancychiken\ezhomes\EzHomes$SetHomeCommand.class
-com\thefancychiken\ezhomes\EzHomes$HomeCommand$1.class
-com\thefancychiken\ezhomes\EzHomes$HomeCommand.class
-com\thefancychiken\ezhomes\EzHomes.class
+ezhomes\EzHomes$HomeCommand$1.class
+ezhomes\EzHomes$DelHome.class
+ezhomes\EzHomes$HomeCommand.class
+ezhomes\EzHomes$1.class
+ezhomes\EzHomes.class
+ezhomes\EzHomes$SetHomeCommand.class
+ezhomes\EzHomes$ViewHomes.class

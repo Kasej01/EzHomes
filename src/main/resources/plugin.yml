@@ -9,3 +9,9 @@ commands:
   sethome:
     description: Set your current location as a home.
     usage: "/sethome"
+  homes:
+    description: View all home names
+    usage: "/homes"
+  delhome:
+    description: Delete a home
+    usage: "/delhome"

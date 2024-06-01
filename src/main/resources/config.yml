@@ -1,0 +1,5 @@
+settings:
+# Default of 5 seconds, 1 second = 20 ticks
+  teleportDelay: 100
+# Default of 2
+  maxHomes: 2

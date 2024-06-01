@@ -1,11 +1,17 @@
 name: EzHomes
 version: 1.0
-main: com.thefancychiken.ezhomes.EzHomes
+main: ezhomes.EzHomes
 api-version: 1.20
 commands:
   home:
     description: Teleport to your home.
     usage: "/home"
   sethome:
-    description: Set your current location as home.
+    description: Set your current location as a home.
     usage: "/sethome"
+  homes:
+    description: View all home names
+    usage: "/homes"
+  delhome:
+    description: Delete a home
+    usage: "/delhome"

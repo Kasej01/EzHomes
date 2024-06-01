@@ -4,7 +4,7 @@
   <groupId>ezhomes</groupId>
   <artifactId>EzHomes</artifactId>
   <packaging>jar</packaging>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0</version>
   <name>EzHomes</name>
   <url>http://maven.apache.org</url>
   <dependencies>
