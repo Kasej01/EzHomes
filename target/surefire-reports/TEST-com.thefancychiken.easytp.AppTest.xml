@@ -15,7 +15,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="US"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk-22\bin"/>
-    <property name="sun.java.command" value="C:\Users\kasej\AppData\Local\Temp\surefire12461915368711910370\surefirebooter-20240601101955752_3.jar C:\Users\kasej\AppData\Local\Temp\surefire12461915368711910370 2024-06-01T10-19-55_607-jvmRun1 surefire-20240601101955752_1tmp surefire_0-20240601101955752_2tmp"/>
+    <property name="sun.java.command" value="C:\Users\kasej\AppData\Local\Temp\surefire9659288317736643033\surefirebooter-20240601104747379_3.jar C:\Users\kasej\AppData\Local\Temp\surefire9659288317736643033 2024-06-01T10-47-47_262-jvmRun1 surefire-20240601104747379_1tmp surefire_0-20240601104747379_2tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="C:\Users\kasej\OneDrive\Desktop\Plugins\1.20.6\EzHomes\target\test-classes;C:\Users\kasej\OneDrive\Desktop\Plugins\1.20.6\EzHomes\target\classes;C:\Users\kasej\.m2\repository\junit\junit\3.8.1\junit-3.8.1.jar;C:\Users\kasej\.m2\repository\org\spigotmc\spigot-api\1.20.6-R0.1-SNAPSHOT\spigot-api-1.20.6-R0.1-SNAPSHOT.jar;C:\Users\kasej\.m2\repository\com\google\guava\guava\32.1.2-jre\guava-32.1.2-jre.jar;C:\Users\kasej\.m2\repository\com\google\guava\failureaccess\1.0.1\failureaccess-1.0.1.jar;C:\Users\kasej\.m2\repository\com\google\guava\listenablefuture\9999.0-empty-to-avoid-conflict-with-guava\listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar;C:\Users\kasej\.m2\repository\com\google\code\findbugs\jsr305\3.0.2\jsr305-3.0.2.jar;C:\Users\kasej\.m2\repository\org\checkerframework\checker-qual\3.33.0\checker-qual-3.33.0.jar;C:\Users\kasej\.m2\repository\com\google\errorprone\error_prone_annotations\2.18.0\error_prone_annotations-2.18.0.jar;C:\Users\kasej\.m2\repository\com\google\j2objc\j2objc-annotations\2.8\j2objc-annotations-2.8.jar;C:\Users\kasej\.m2\repository\com\google\code\gson\gson\2.10.1\gson-2.10.1.jar;C:\Users\kasej\.m2\repository\org\joml\joml\1.10.5\joml-1.10.5.jar;C:\Users\kasej\.m2\repository\net\md-5\bungeecord-chat\1.20-R0.2\bungeecord-chat-1.20-R0.2.jar;C:\Users\kasej\.m2\repository\org\yaml\snakeyaml\2.2\snakeyaml-2.2.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -30,7 +30,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="surefire.real.class.path" value="C:\Users\kasej\AppData\Local\Temp\surefire12461915368711910370\surefirebooter-20240601101955752_3.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\kasej\AppData\Local\Temp\surefire9659288317736643033\surefirebooter-20240601104747379_3.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="22.0.1+8-16"/>
@@ -58,5 +58,5 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="66.0"/>
   </properties>
-  <testcase name="testApp" classname="com.thefancychiken.easytp.AppTest" time="0.003"/>
+  <testcase name="testApp" classname="com.thefancychiken.easytp.AppTest" time="0.004"/>
 </testsuite>
