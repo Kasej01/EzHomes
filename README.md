@@ -30,3 +30,4 @@ You can [download](https://legacy.curseforge.com/minecraft/bukkit-plugins/ezhome
 ## My Other Plugins
 
 - [RolePlayers](https://github.com/Kasej01/RolePlayers) - RolePlayers custom classes Plugin
+-  [HeadStash] (https://github.com/Kasej01/HeadStash) - Head Stash inventory save on death
